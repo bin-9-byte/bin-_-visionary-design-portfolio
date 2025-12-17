@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEXUS | Visionary Design Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              neon: {
+                purple: '#6366f1', // Indigo (Aurora Night Sky)
+                cyan: '#00e0ff',   // Aurora Blue
+                green: '#00ffa3',  // Aurora Green
+                pink: '#ff0055',   // Retained for error states/accents if needed
+              },
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'blob': 'blob 7s infinite',
+              'glitch': 'glitch 1s linear infinite',
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              },
+              glitch: {
+                '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+                '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+                '62%': { transform: 'translate(0,0) skew(5deg)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #020408; /* Very dark slightly bluish black */
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+      @media (min-width: 768px) {
+        body, a, button {
+          cursor: none;
+        }
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1a2e35;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00e0ff;
+      }
+      
+      .noise-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 50;
+        pointer-events: none;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+      }
+
+      /* Glitch Effect Classes */
+      .glitch-wrapper {
+        position: relative;
+      }
+      .glitch-wrapper::before,
+      .glitch-wrapper::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .glitch-wrapper::before {
+        left: 2px;
+        text-shadow: -1px 0 #4f46e5;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+      }
+      .glitch-wrapper::after {
+        left: -2px;
+        text-shadow: -1px 0 #00ffa3;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        animation: glitch-anim-2 3s infinite linear alternate-reverse;
+      }
+      @keyframes glitch-anim-1 {
+        0% { clip-path: inset(20% 0 80% 0); }
+        20% { clip-path: inset(60% 0 10% 0); }
+        40% { clip-path: inset(40% 0 50% 0); }
+        60% { clip-path: inset(80% 0 5% 0); }
+        80% { clip-path: inset(10% 0 60% 0); }
+        100% { clip-path: inset(30% 0 30% 0); }
+      }
+      @keyframes glitch-anim-2 {
+        0% { clip-path: inset(10% 0 60% 0); }
+        20% { clip-path: inset(30% 0 20% 0); }
+        40% { clip-path: inset(10% 0 80% 0); }
+        60% { clip-path: inset(70% 0 10% 0); }
+        80% { clip-path: inset(50% 0 30% 0); }
+        100% { clip-path: inset(20% 0 50% 0); }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.1/",
+    "react": "https://esm.sh/react@^19.2.1",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.560.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.1/",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.26"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <div class="noise-bg"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
