@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const clipPath = useTransform(
     scrollYProgress,
     [0, 1],
-    ["inset(100% 0 0 0)", "inset(0% 0 0 0)"]
+    ["inset(100% 0 0 0)", "inset(18% 0 0 0)"]
   );
 
   return (
@@ -44,7 +44,7 @@ const App: React.FC = () => {
       */}
       <div 
         ref={containerRef}
-        className="relative z-20 mb-[85vh] md:mb-[80vh] lg:mb-[75vh]"
+        className="relative z-20 mb-[100vh]"
       >
         <Hero />
         
@@ -54,15 +54,16 @@ const App: React.FC = () => {
         {/* Portfolio Section */}
         <Portfolio />
         
-        <section id="about" className="min-h-[90vh] py-32 px-6 flex items-center justify-center relative border-y border-white/5 overflow-hidden">
-          <div className="max-w-5xl text-center relative z-10">
-            <p className="text-3xl md:text-6xl font-serif italic text-gray-200 leading-tight">
-              "Design is not just what it looks like and feels like. Design is how it <span className="text-sky-300 not-italic font-bold font-sans tracking-tighter drop-shadow-[0_0_18px_rgba(56,189,248,0.55)]">works</span>."
-            </p>
-            <div className="mt-12 flex flex-col items-center gap-4">
-               <div className="h-24 w-[1px] bg-gradient-to-b from-transparent via-sky-400/70 to-transparent"></div>
-               <span className="text-xs font-mono text-sky-300 tracking-widest uppercase">Philosophy</span>
+        <section id="about" className="min-h-screen py-32 px-6 md:px-10 lg:px-12 xl:px-16 flex items-center justify-center relative overflow-hidden">
+          <div className="max-w-5xl mx-auto text-center relative z-10">
+            <div className="flex flex-col items-center mb-10">
+              <span className="text-[11px] tracking-[0.18em] text-white/45 uppercase">Philosophy</span>
             </div>
+            <p className="text-3xl md:text-5xl font-serif italic text-gray-100 leading-tight">
+              “Design is not just what it looks like and feels like.
+              <br className="hidden md:block" />
+              Design is how it <span className="not-italic font-semibold font-sans text-white">works.</span>”
+            </p>
           </div>
         </section>
       </div>

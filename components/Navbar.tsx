@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Hexagon, ArrowRight } from 'lucide-react';
+import { X } from 'lucide-react';
 
 // Updated Nav Order: Profile is now the second item (first link)
 const navLinks = [
@@ -11,14 +11,13 @@ const navLinks = [
 ];
 
 export const Navbar: React.FC = () => {
-  const [isCompact, setIsCompact] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isBelowHero, setIsBelowHero] = useState(false);
+  const [isNavPanelOpen, setIsNavPanelOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('Home');
 
   const lastIsAtTopRef = useRef<boolean>(true);
-  const lastIsCompactRef = useRef<boolean>(false);
+  const lastIsBelowHeroRef = useRef<boolean>(false);
   const lastActiveSectionRef = useRef<string>('Home');
 
   useEffect(() => {
@@ -28,17 +27,16 @@ export const Navbar: React.FC = () => {
       rafId = null;
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
-
       const nextIsAtTop = scrollY < 50;
       if (nextIsAtTop !== lastIsAtTopRef.current) {
         lastIsAtTopRef.current = nextIsAtTop;
         setIsAtTop(nextIsAtTop);
       }
 
-      const nextIsCompact = scrollY > viewportHeight * 0.8;
-      if (nextIsCompact !== lastIsCompactRef.current) {
-        lastIsCompactRef.current = nextIsCompact;
-        setIsCompact(nextIsCompact);
+      const nextIsBelowHero = scrollY > viewportHeight * 0.7;
+      if (nextIsBelowHero !== lastIsBelowHeroRef.current) {
+        lastIsBelowHeroRef.current = nextIsBelowHero;
+        setIsBelowHero(nextIsBelowHero);
       }
 
       // "Home" label when near top (no layout reads)
@@ -99,116 +97,139 @@ export const Navbar: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Logic: Show full menu if NOT compact OR if Hovered
-  const showFullMenu = !isCompact || isHovered;
-
   const surfaceClass = isAtTop
-    ? 'bg-transparent border border-transparent shadow-none'
-    : 'bg-black/70 border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.35)]';
+    ? 'bg-black/25 border-white/10'
+    : 'bg-black/70 border-white/15';
+
+  const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault();
+    const id = href.replace('#', '');
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const y = rect.top + window.scrollY;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+    setIsNavPanelOpen(false);
+  };
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-40 flex justify-center items-start pt-6 pointer-events-none">
-        {/*
-          Root fix for the "instant jank": keep BOTH states mounted.
-          We only crossfade/translate via CSS (no mount/unmount, no layout animation).
-        */}
-        <div
-          className="pointer-events-auto relative w-[min(90vw,1280px)] h-14"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Expanded */}
+      <motion.nav
+        className="fixed top-0 left-0 right-0 z-40 flex justify-center pt-4 pointer-events-none"
+        initial={false}
+        animate={isBelowHero && !isNavPanelOpen ? { opacity: 0, y: -16 } : { opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: 'easeOut' }}
+      >
+        <div className="pointer-events-auto w-[min(92vw,1120px)]">
           <div
-            className={`absolute inset-0 rounded-3xl px-6 md:px-8 py-3 overflow-hidden transition-[opacity,transform,background-color,border-color] duration-150 ease-out will-change-transform transform-gpu ${surfaceClass} ${
-              showFullMenu ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
-            }`}
+            className={`flex items-center justify-between gap-6 rounded-full px-4 md:px-6 py-2.5 border backdrop-blur-xl transition-colors duration-300 ${surfaceClass}`}
           >
-            <div className="flex items-center justify-between gap-8 h-10">
-              {/* Logo */}
-              <a href="#" className="flex items-center gap-2 group shrink-0">
-                <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
-                  <Hexagon className="w-8 h-8 text-white fill-white/10 group-hover:stroke-sky-300 transition-colors" />
-                </motion.div>
-                <span className="font-mono font-bold text-xl tracking-tighter whitespace-nowrap mix-blend-difference">
-                  NEXUS
-                </span>
-              </a>
+            <a href="#" className="flex items-center gap-2 shrink-0">
+              <span className="text-sm font-semibold tracking-[0.18em] uppercase text-white/80">Bin Ma</span>
+            </a>
 
-              {/* Links */}
-              <div className="hidden md:flex items-center gap-2">
-                {navLinks.map((link) => (
+            <div className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.name;
+                return (
                   <a
                     key={link.name}
                     href={link.href}
-                    className="relative px-5 py-2 text-sm font-bold tracking-wide text-white/80 hover:text-white transition-colors rounded-full hover:bg-white/5 uppercase"
+                    onClick={(event) => handleNavClick(event, link.href)}
+                    className="relative px-3 py-1.5 text-sm text-white/70 hover:text-white transition-colors"
                   >
-                    {link.name}
+                    <span>{link.name}</span>
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute left-2 right-2 -bottom-1 h-[2px] rounded-full bg-white"
+                      />
+                    )}
                   </a>
-                ))}
-              </div>
-
-              {/* CTA + mobile toggle */}
-              <div className="flex items-center gap-4 shrink-0">
-                <button
-                  className={`hidden md:flex items-center gap-2 px-6 py-2 font-bold rounded-full text-sm whitespace-nowrap overflow-hidden transition-colors ${
-                    isAtTop ? 'bg-white/10 border border-white/20 text-white' : 'bg-white text-black'
-                  } hover:bg-orange-400 hover:text-black hover:border-orange-300`}
-                >
-                  <span>Let's Talk</span>
-                  <ArrowRight size={14} />
-                </button>
-
-                <button className="md:hidden text-white p-1" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                  {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-              </div>
+                );
+              })}
             </div>
-          </div>
 
-          {/* Compact */}
-          <div
-            className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] rounded-full px-5 py-2 overflow-hidden bg-black/80 border border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.35)] transition-[opacity,transform] duration-150 ease-out will-change-transform transform-gpu ${
-              showFullMenu ? 'opacity-0 -translate-y-[calc(50%+8px)] pointer-events-none' : 'opacity-100'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-3 h-10">
-              <Hexagon className="w-5 h-5 text-white fill-white/10" />
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-sky-300 animate-pulse"></span>
-                <span className="text-sm font-mono tracking-widest uppercase text-white whitespace-nowrap truncate">
-                  {activeSection}
-                </span>
-              </div>
-              <span className="w-5" />
-            </div>
+            <div className="hidden md:block w-6" />
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* Mobile Menu Overlay */}
+      {(isBelowHero || isNavPanelOpen) && (
+        <motion.button
+          whileHover={{ scale: 1.06, y: -2 }}
+          whileTap={{ scale: 0.94, y: 0 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 18, mass: 0.4 }}
+          className={`fixed top-4 right-4 md:top-6 md:right-6 z-50 group flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-full border transition-[background-color,border-color,box-shadow] duration-200 ${
+            isNavPanelOpen
+              ? 'bg-black text-white border-black hover:bg-black/90 hover:shadow-[0_14px_28px_rgba(0,0,0,0.4)]'
+              : 'bg-white/95 text-black border-black/10 hover:border-black/20 hover:shadow-[0_14px_28px_rgba(0,0,0,0.25)]'
+          }`}
+          onClick={() => setIsNavPanelOpen((open) => !open)}
+          aria-label="Toggle navigation panel"
+        >
+          {isNavPanelOpen ? (
+            <X size={16} className="text-white" />
+          ) : (
+            <span className="flex gap-[3px]">
+              <span className="w-[2px] h-3 md:h-3.5 bg-black/90 group-hover:bg-black rounded-full transition-colors" />
+              <span className="w-[2px] h-3 md:h-3.5 bg-black/90 group-hover:bg-black rounded-full transition-colors" />
+            </span>
+          )}
+        </motion.button>
+      )}
+
+      {/* Top sheet navigation panel */}
       <AnimatePresence>
-        {isMobileMenuOpen && (
+        {isNavPanelOpen && (
           <motion.div
-            initial={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
-            animate={{ opacity: 1, clipPath: "circle(150% at 100% 0%)" }}
-            exit={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
-            transition={{ type: "spring", stiffness: 50, damping: 20 }}
-            className="fixed inset-0 z-30 bg-black flex flex-col items-center justify-center space-y-8 md:hidden"
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 80, damping: 20 }}
+            className="fixed top-0 left-0 right-0 z-40 bg-white text-black shadow-[0_20px_40px_rgba(0,0,0,0.45)]"
           >
-            {navLinks.map((link, i) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 * i }}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-4xl font-bold tracking-tight hover:text-sky-300 transition-colors"
-              >
-                {link.name}
-              </motion.a>
-            ))}
+            <div className="w-[min(96vw,1120px)] mx-auto px-6 md:px-10 py-6 md:py-8 flex flex-col md:flex-row md:items-start justify-between gap-10">
+              <div className="space-y-1 text-sm">
+                <div className="font-semibold tracking-[0.18em] uppercase">Bin Ma</div>
+                <div className="text-xs text-black/50">Digital design & creative development</div>
+              </div>
+
+              <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+                <div>
+                  <div className="text-[11px] tracking-[0.16em] text-black/50 uppercase mb-3">Pages</div>
+                  <div className="space-y-2">
+                    {navLinks.map((link) => (
+                      <button
+                        key={link.name}
+                        onClick={(event) => handleNavClick(event as any, link.href)}
+                        className="block text-left text-sm text-black/80 hover:text-black"
+                      >
+                        {link.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-[11px] tracking-[0.16em] text-black/50 uppercase mb-3">Contact</div>
+                  <div className="space-y-2 text-sm">
+                    <a href="mailto:contact@nexus.design" className="block text-black/80 hover:text-black">
+                      contact@nexus.design
+                    </a>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-[11px] tracking-[0.16em] text-black/50 uppercase mb-3">Studio</div>
+                  <div className="space-y-1 text-sm text-black/70">
+                    <div>Based in Tokyo</div>
+                    <div>Working worldwide</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

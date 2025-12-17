@@ -37,9 +37,9 @@ export const Services: React.FC = () => {
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="text-6xl md:text-8xl font-black tracking-tighter text-white/90 drop-shadow-lg"
+              className="text-6xl md:text-7xl font-extrabold tracking-tighter text-white/90 drop-shadow-lg"
             >
-              Capa<br/>bilities
+              Capabilities
             </motion.h2>
             <motion.div 
               initial={{ opacity: 0 }}
@@ -48,7 +48,7 @@ export const Services: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="text-gray-200 text-lg max-w-sm border-l-2 border-sky-400/70 pl-6 drop-shadow-md"
             >
-              My approach intersects strategic thinking with visual excellence, ensuring every output is not just seen, but felt.
+              I design clear, calm interfaces that feel intuitive from the first glance.
             </motion.div>
           </div>
 
@@ -64,60 +64,22 @@ export const Services: React.FC = () => {
 };
 
 const SpotlightCard: React.FC<{ index: number; service: any }> = ({ index, service }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
-    const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  const handleMouseEnter = () => setOpacity(1);
-  const handleMouseLeave = () => setOpacity(0);
-
   return (
     <motion.div
-      ref={divRef}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      // Fully transparent card with border
-      className="relative rounded-2xl overflow-hidden bg-transparent border border-white/10 backdrop-blur-none"
+      className="relative rounded-2xl overflow-hidden border border-white/10 bg-white/5/5 backdrop-blur-sm group"
     >
-      {/* Spotlight Border Effect - tuned to match blue/orange background */}
-      <div
-        className="pointer-events-none absolute -inset-px transition duration-300 opacity-0 group-hover:opacity-100"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(56,189,248,0.45), transparent 40%)`,
-        }}
-      />
-      
-      {/* COMPLETELY TRANSPARENT CARD INTERIOR */}
-      <div className="relative h-full bg-transparent hover:bg-white/5 transition-colors duration-500 p-8 rounded-2xl overflow-hidden group">
-        
-        {/* Spotlight Inner Fill */}
-        <div
-          className="pointer-events-none absolute -inset-px transition duration-300"
-          style={{
-            opacity,
-            background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(56,189,248,0.14), transparent 45%)`,
-          }}
-        />
-
+      <div className="relative h-full p-8 rounded-2xl overflow-hidden bg-black/40 group-hover:bg-black/55 transition-colors duration-300">
         <div className="relative flex items-center gap-6 z-10">
-          <div className="p-4 rounded-xl bg-transparent border border-white/10 text-white group-hover:text-sky-300 group-hover:scale-110 transition-all duration-300 group-hover:border-sky-300/60 shadow-[0_0_15px_rgba(0,0,0,0.2)]">
+          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-white group-hover:text-sky-300 group-hover:border-sky-300/50 transition-colors duration-300">
             {service.icon}
           </div>
           <div>
-            <h3 className="text-2xl font-bold mb-2 text-white group-hover:translate-x-2 transition-transform duration-300 drop-shadow-md shadow-black">{service.title}</h3>
-            <p className="text-gray-300 group-hover:text-white transition-colors text-sm leading-relaxed opacity-90 group-hover:opacity-100 drop-shadow-sm">{service.desc}</p>
+            <h3 className="text-2xl font-semibold mb-2 text-white group-hover:text-sky-300 transition-colors duration-300">{service.title}</h3>
+            <p className="text-gray-300 group-hover:text-white transition-colors text-sm leading-relaxed opacity-90 group-hover:opacity-100">{service.desc}</p>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent, useMotionValue } from 'framer-motion';
 import { ArrowUpRight, AlignLeft } from 'lucide-react';
 
 const projects = [
@@ -49,6 +49,11 @@ export const Portfolio: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [snapDirection, setSnapDirection] = useState<'up' | 'down' | null>(null);
+  const [isImageHovered, setIsImageHovered] = useState(false);
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
+  const cursorXSpring = useSpring(cursorX, { mass: 0.2, stiffness: 240, damping: 20 });
+  const cursorYSpring = useSpring(cursorY, { mass: 0.2, stiffness: 240, damping: 20 });
 
   // 1. Setup Scroll Track
   const { scrollYProgress } = useScroll({
@@ -145,7 +150,7 @@ export const Portfolio: React.FC = () => {
              {/* Floating Header */}
              <div className="absolute top-12 left-8 md:left-16 lg:left-20 xl:left-24 flex items-center gap-3 opacity-60">
                 <AlignLeft size={14} className="text-white/60" />
-                <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-white/70">Selected Works 2023—24</span>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/70">Selected Works 2023—24</span>
              </div>
 
              <div className="relative">
@@ -160,16 +165,16 @@ export const Portfolio: React.FC = () => {
                  >
                     {/* 1. Meta Tag */}
                     <div className="flex items-center gap-4 mb-6">
-                       <span className="px-2 py-0.5 border border-white/15 bg-white/5 text-white/80 text-[10px] font-mono tracking-[0.25em] uppercase rounded-sm">
+                       <span className="px-2 py-0.5 border border-white/15 bg-white/5 text-white/80 text-[10px] tracking-[0.16em] uppercase rounded-sm">
                           {currentProject.code}
                        </span>
                        <span className="h-[1px] w-12 bg-white/10"></span>
-                       <span className="text-white/50 text-xs font-mono tracking-[0.22em] uppercase">{currentProject.category}</span>
+                       <span className="text-white/60 text-xs tracking-[0.14em] uppercase">{currentProject.category}</span>
                     </div>
                     
                     {/* 2. Massive Title */}
                     <motion.h2 
-                      className="text-6xl md:text-7xl xl:text-8xl font-black text-white leading-[0.9] tracking-[-0.04em] mb-8 max-w-[18ch]"
+                      className="text-6xl md:text-7xl xl:text-8xl font-extrabold text-white leading-[0.9] tracking-[-0.04em] mb-8 max-w-[18ch]"
                       animate={{ y: [0, -1, 0] }}
                       transition={{ duration: 0.28 }}
                     >
@@ -181,15 +186,15 @@ export const Portfolio: React.FC = () => {
                     <div className="border-t border-white/10 pt-6 mt-4 max-w-[54ch]">
                        <div className="grid grid-cols-2 gap-6">
                           <div>
-                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2 font-mono">Client</p>
+                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Client</p>
                              <p className="text-lg text-white font-medium">{currentProject.client}</p>
                           </div>
                           <div>
-                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2 font-mono">Role</p>
+                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Role</p>
                              <p className="text-lg text-white font-medium">{currentProject.stats.role}</p>
                           </div>
                           <div className="col-span-2 mt-4">
-                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2 font-mono">Brief</p>
+                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Brief</p>
                              <p className="text-white/55 leading-relaxed text-base md:text-lg">
                                 {currentProject.description}
                              </p>
@@ -197,16 +202,17 @@ export const Portfolio: React.FC = () => {
                        </div>
                     </div>
 
-                    {/* 4. Action */}
-                    <motion.button 
-                      className="mt-8 inline-flex items-center gap-3 group border border-white/15 px-6 py-3 rounded-full cursor-none backdrop-blur-sm bg-white/0 hover:bg-white/5 transition-colors"
-                      whileHover={{ x: 6 }}
-                    >
-                       <ArrowUpRight size={18} className="text-white/70 group-hover:text-white transition-colors" />
-                       <span className="font-mono text-[11px] tracking-[0.28em] uppercase text-white/70 group-hover:text-white transition-colors">
-                          View Case Study
-                       </span>
-                    </motion.button>
+                    <div className="mt-8 flex flex-wrap items-center gap-4">
+                      <motion.button 
+                        className="inline-flex items-center gap-3 group border border-white/15 px-6 py-3 rounded-full cursor-none backdrop-blur-sm bg-white/0 hover:bg-white/5 transition-colors"
+                        whileHover={{ x: 6 }}
+                      >
+                         <ArrowUpRight size={18} className="text-white/70 group-hover:text-white transition-colors" />
+                         <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/70 group-hover:text-white transition-colors">
+                            View Case Study
+                         </span>
+                      </motion.button>
+                    </div>
 
                  </motion.div>
                </AnimatePresence>
@@ -218,10 +224,10 @@ export const Portfolio: React.FC = () => {
           <div className="col-span-12 lg:col-span-6 h-[40vh] md:h-[44vh] lg:h-full relative overflow-hidden">
 
             {/* Editorial frame layout: centered image + caption */}
-            <div className="absolute inset-0 flex items-center justify-center px-6 md:px-10 lg:px-0">
+            <div className="absolute inset-0 flex items-center justify-center px-6 md:px-10 lg:px-12 xl:px-16">
               <div className="w-full max-w-[720px] xl:max-w-[820px]">
                 {/* Frame */}
-                <div className="relative w-full overflow-hidden border border-white/10 rounded-2xl bg-black/15 backdrop-blur-[2px]">
+                <div className="relative w-full overflow-hidden border border-white/5 rounded-2xl bg-black/30 backdrop-blur-[6px]">
                   <div className="relative w-full pt-[70%]">
                     <div className="absolute inset-0">
                       <AnimatePresence mode="popLayout">
@@ -233,14 +239,33 @@ export const Portfolio: React.FC = () => {
                           transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
                           className="relative w-full h-full"
                         >
-                          <div className="w-full h-full relative">
+                          <div
+                            className="w-full h-full relative group"
+                            onMouseEnter={() => {
+                              setIsImageHovered(true);
+                              if (typeof window !== 'undefined') {
+                                window.dispatchEvent(new CustomEvent('portfolio-image-hover', { detail: { hovered: true } }));
+                              }
+                            }}
+                            onMouseLeave={() => {
+                              setIsImageHovered(false);
+                              if (typeof window !== 'undefined') {
+                                window.dispatchEvent(new CustomEvent('portfolio-image-hover', { detail: { hovered: false } }));
+                              }
+                            }}
+                            onMouseMove={(e) => {
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              cursorX.set(e.clientX - rect.left);
+                              cursorY.set(e.clientY - rect.top);
+                            }}
+                          >
                             <motion.img
                               src={currentProject.image}
                               alt={currentProject.title}
-                              className="absolute inset-0 w-full h-full object-cover opacity-72 will-change-transform"
-                              style={{ y: imageParallaxY, scale: 1.08 }}
+                              className="absolute inset-0 w-full h-full object-cover opacity-80 will-change-transform"
+                              style={{ y: imageParallaxY, scale: 1.02 }}
                             />
-                            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-12 mix-blend-overlay"></div>
+                            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06] mix-blend-overlay"></div>
                             {snapDirection && (
                               <div className="absolute inset-0 pointer-events-none z-30">
                                 <motion.div
@@ -251,6 +276,21 @@ export const Portfolio: React.FC = () => {
                                 />
                               </div>
                             )}
+
+                            <div className="pointer-events-none absolute inset-0 z-20">
+                              <motion.div
+                                className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full text-[10px] tracking-[0.18em] uppercase leading-none text-center"
+                                animate={
+                                  isImageHovered
+                                    ? { width: 80, height: 80, backgroundColor: 'rgba(255,255,255,0.92)', color: '#000000', opacity: 1 }
+                                    : { width: 32, height: 32, backgroundColor: 'rgba(15,23,42,0.35)', color: 'rgba(255,255,255,0.7)', opacity: 0 }
+                                }
+                                transition={{ type: 'spring', stiffness: 230, damping: 24, mass: 0.45 }}
+                                style={{ left: cursorXSpring, top: cursorYSpring }}
+                              >
+                                <span className="block w-full text-center leading-none">view project</span>
+                              </motion.div>
+                            </div>
                           </div>
                         </motion.div>
                       </AnimatePresence>
@@ -259,7 +299,7 @@ export const Portfolio: React.FC = () => {
                 </div>
 
                 {/* Caption */}
-                <div className="mt-5 flex items-baseline justify-between gap-6 text-[10px] md:text-[11px] font-mono tracking-[0.28em] text-white/55">
+                <div className="mt-5 flex items-baseline justify-between gap-6 text-[10px] md:text-[11px] tracking-[0.16em] text-white/55">
                   <div className="uppercase">
                     <span className="text-white/70">{currentProject.client}</span>
                     <span className="text-white/35"> · </span>
@@ -272,13 +312,21 @@ export const Portfolio: React.FC = () => {
           </div>
         </div>
         {/* Global Progress Bar removed for seamless background */}
-        
+
+        <button
+          type="button"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 cursor-none group border border-white/15 px-6 py-3 rounded-full backdrop-blur-sm bg-black/40 hover:bg-white/10 transition-colors text-[11px] font-mono tracking-[0.2em] uppercase text-white/70 hover:text-white z-40"
+        >
+          <span>Discover all project</span>
+          <ArrowUpRight size={16} className="text-white/70 group-hover:text-white transition-colors" />
+        </button>
+
         {/* Mobile Page Indicator */}
         <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex gap-2 lg:hidden z-40">
             {projects.map((_, i) => (
                 <div 
                     key={i} 
-                    className={`h-1 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-neon-cyan w-8' : 'bg-white/20 w-2'}`}
+                    className={`h-1 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-sky-300 w-8' : 'bg-white/20 w-2'}`}
                 />
             ))}
         </div>

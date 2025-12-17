@@ -1,108 +1,104 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUp } from 'lucide-react';
 
 export const Contact: React.FC = () => {
   const goTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <section id="contact" className="relative h-full min-h-0 bg-black px-6 md:px-16 pt-28 md:pt-36 pb-12 md:pb-16">
+    <section id="contact" className="relative h-full min-h-0 bg-black px-6 md:px-10 lg:px-12 xl:px-16 pt-28 md:pt-36 pb-12 md:pb-16">
       {/* Top overlay: solid black to prevent background bleed */}
       <div className="absolute top-0 left-0 w-full h-28 md:h-32 bg-black pointer-events-none"></div>
 
-      <div className="w-full max-w-[1600px] mx-auto grid grid-cols-12 gap-8">
-        {/* Left: headline + subcopy + email CTA */}
-        <div className="col-span-12 md:col-span-7 lg:col-span-6 flex flex-col justify-center">
+      <div className="w-full max-w-7xl mx-auto">
+        <div className="grid grid-cols-12 gap-y-14 gap-x-10">
+        <div className="col-span-12 lg:col-span-7 flex flex-col justify-center">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-[10vw] md:text-[6vw] lg:text-[4.8vw] font-black leading-[0.95] tracking-tight"
+            className="text-4xl md:text-6xl font-semibold leading-tight tracking-tight text-white/90"
           >
-            WE WOULD LOVE
-            <br />
-            TO HEAR FROM YOU.
+            Let’s work together.
           </motion.h2>
 
-          <p className="mt-6 text-sm md:text-base text-white/60 max-w-xl">
-            Feel free to reach out if you want to collaborate with us, or simply have a chat.
+          <p className="mt-5 text-sm md:text-base text-white/60 max-w-xl leading-relaxed">
+            Reach out for collaboration, product design, or creative development. I usually reply within 1–2 business days.
           </p>
 
           <a
             href="mailto:contact@nexus.design"
-            className="group mt-8 inline-flex items-center gap-3 text-xl md:text-2xl font-medium tracking-tight"
+            className="group mt-8 inline-flex items-center gap-3 text-base md:text-lg font-medium tracking-tight text-white/90"
           >
-            contact@nexus.design
-            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-white/20 group-hover:border-sky-300 transition-colors">
-              <ArrowRight size={16} className="text-white group-hover:text-sky-300" />
+            <span className="border-b border-white/10 group-hover:border-white/30 transition-colors">
+              contact@nexus.design
+            </span>
+            <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/15 bg-white/5 group-hover:bg-white/10 group-hover:border-white/25 transition-colors">
+              <ArrowRight size={16} className="text-white/80 group-hover:text-white" />
             </span>
           </a>
-
-          {/* Copyright bottom-left */}
-          <div className="mt-16 text-[10px] font-mono text-white/40">
-            © NEXUS STUDIO 2024 · All rights reserved
-          </div>
         </div>
 
-        {/* Middle columns: address + follow + sites */}
-        <div className="col-span-12 md:col-span-5 lg:col-span-4 grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Address */}
-          <div>
-            <div className="text-[10px] font-mono tracking-[0.25em] text-white/50 uppercase mb-3">OUR ADDRESS</div>
-            <div className="space-y-2 text-sm text-white/80">
-              <div>Unit D104</div>
-              <div>116 Commercial Street</div>
-              <div>London, E1 6NF</div>
-              <div>United Kingdom</div>
+        <div className="col-span-12 lg:col-span-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div>
+              <div className="text-[11px] tracking-[0.16em] text-white/45 uppercase mb-4">Studio</div>
+              <div className="space-y-3 text-sm text-white/75">
+                <div>Based in Tokyo</div>
+                <div>Working worldwide</div>
+                <a href="mailto:contact@nexus.design" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+                  Say hello
+                  <ArrowRight size={14} className="text-white/50" />
+                </a>
+              </div>
             </div>
-            <div className="mt-4 text-[10px] text-white/40 font-mono space-y-1">
-              <div>VAT: 319656475</div>
-              <div>Company no. 11843590</div>
-              <div>Registered in England & Wales</div>
-            </div>
-          </div>
 
-          {/* Follow + sites */}
-          <div>
-            <div className="text-[10px] font-mono tracking-[0.25em] text-white/50 uppercase mb-3">FOLLOW US</div>
-            <div className="text-sm text-white/80 flex gap-3 mb-4">
-              <span>Fb</span>
-              <span>Tw</span>
-              <span>Ig</span>
-              <span>Li</span>
+            <div>
+              <div className="text-[11px] tracking-[0.16em] text-white/45 uppercase mb-4">Social</div>
+              <div className="space-y-3 text-sm">
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Instagram</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">X (Twitter)</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">LinkedIn</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Behance</a>
+              </div>
             </div>
-            <div className="space-y-2 text-sm">
-              <a href="#" className="block text-white/80 hover:text-white transition-colors">↗ NEXUS TOKYO</a>
-              <a href="#" className="block text-white/80 hover:text-white transition-colors">↗ NEXUS NYC</a>
-              <a href="#" className="block text-white/80 hover:text-white transition-colors">↗ POWERED BY TOKYO</a>
+
+            <div>
+              <div className="text-[11px] tracking-[0.16em] text-white/45 uppercase mb-4">Navigate</div>
+              <div className="space-y-3 text-sm">
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Home</a>
+                <a href="#work" className="block text-white/70 hover:text-white transition-colors">Work</a>
+                <a href="#profile" className="block text-white/70 hover:text-white transition-colors">Team</a>
+                <a href="#contact" className="block text-white/70 hover:text-white transition-colors">Contact</a>
+              </div>
+            </div>
+
+            <div>
+              <div className="text-[11px] tracking-[0.16em] text-white/45 uppercase mb-4">Legal</div>
+              <div className="space-y-3 text-sm">
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" className="block text-white/70 hover:text-white transition-colors">Press & News</a>
+              </div>
             </div>
           </div>
         </div>
+        </div>
 
-        {/* Right column: site nav */}
-        <div className="col-span-12 lg:col-span-2">
-          <div className="text-[10px] font-mono tracking-[0.25em] text-white/50 uppercase mb-3">HOME</div>
-          <div className="space-y-2 text-sm">
-            <a href="#" className="block text-white/80 hover:text-white">Home</a>
-            <a href="#work" className="block text-white/80 hover:text-white">Work</a>
-            <a href="#services" className="block text-white/80 hover:text-white">Services</a>
-            <a href="#profile" className="block text-white/80 hover:text-white">Team</a>
-            <a href="#contact" className="block text-white/80 hover:text-white">Contact</a>
-            <a href="#" className="block text-white/80 hover:text-white">Press & News</a>
-            <a href="#" className="block text-white/80 hover:text-white">Privacy Policy</a>
-          </div>
+        <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="text-xs text-white/40">© NEXUS STUDIO 2024</div>
+          <button
+            onClick={goTop}
+            className="inline-flex items-center gap-2 text-xs tracking-wide text-white/60 hover:text-white transition-colors"
+            aria-label="Back to top"
+          >
+            Back to top
+            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 transition-colors">
+              <ArrowUp size={14} className="text-white/70" />
+            </span>
+          </button>
         </div>
       </div>
-
-      {/* Top button */}
-      <button
-        onClick={goTop}
-        className="fixed bottom-10 right-10 z-40 text-[10px] font-mono px-4 py-2 rounded-full border border-white/20 text-white/70 hover:text-black hover:bg-white transition-colors"
-        aria-label="Back to top"
-      >
-        TOP ↑
-      </button>
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>

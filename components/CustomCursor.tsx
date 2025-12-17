@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export const CustomCursor: React.FC = () => {
   const [isHovering, setIsHovering] = useState(false);
+  const [isHiddenByPortfolio, setIsHiddenByPortfolio] = useState(false);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   
@@ -25,12 +26,19 @@ export const CustomCursor: React.FC = () => {
       }
     };
 
+    const handlePortfolioHover = (event: Event) => {
+      const customEvent = event as CustomEvent<{ hovered?: boolean }>;
+      setIsHiddenByPortfolio(!!customEvent.detail?.hovered);
+    };
+
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('portfolio-image-hover', handlePortfolioHover as EventListener);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('portfolio-image-hover', handlePortfolioHover as EventListener);
     };
   }, [cursorX, cursorY]);
 
@@ -43,6 +51,7 @@ export const CustomCursor: React.FC = () => {
           y: cursorYSpring,
           scale: isHovering ? 1.5 : 1,
           backgroundColor: isHovering ? 'rgba(56, 189, 248, 0.14)' : 'transparent',
+          opacity: isHiddenByPortfolio ? 0 : 1,
         }}
       />
       <motion.div
@@ -52,6 +61,7 @@ export const CustomCursor: React.FC = () => {
           y: cursorY,
           translateX: 12, // Center dot
           translateY: 12,
+          opacity: isHiddenByPortfolio ? 0 : 1,
         }}
       />
     </>
