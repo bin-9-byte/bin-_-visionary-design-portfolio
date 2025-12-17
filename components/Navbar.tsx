@@ -33,7 +33,7 @@ export const Navbar: React.FC = () => {
         setIsAtTop(nextIsAtTop);
       }
 
-      const nextIsBelowHero = scrollY > viewportHeight * 0.7;
+      const nextIsBelowHero = scrollY > viewportHeight * 0.45;
       if (nextIsBelowHero !== lastIsBelowHeroRef.current) {
         lastIsBelowHeroRef.current = nextIsBelowHero;
         setIsBelowHero(nextIsBelowHero);
@@ -129,7 +129,7 @@ export const Navbar: React.FC = () => {
               <span className="text-sm font-semibold tracking-[0.18em] uppercase text-white/80">Bin Ma</span>
             </a>
 
-            <div className="hidden md:flex items-center gap-1">
+            <div className="hidden md:flex flex-1 items-center justify-end gap-1">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.name;
                 return (
@@ -150,8 +150,6 @@ export const Navbar: React.FC = () => {
                 );
               })}
             </div>
-
-            <div className="hidden md:block w-6" />
           </div>
         </div>
       </motion.nav>

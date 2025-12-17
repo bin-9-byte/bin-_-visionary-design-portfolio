@@ -37,16 +37,13 @@ export const ChatAssistant: React.FC = () => {
   return (
     <>
       <motion.button
-        className="fixed bottom-8 right-8 z-50 p-4 bg-black/60 backdrop-blur-md border border-white/20 text-white rounded-full shadow-[0_0_20px_rgba(0,0,0,0.6)] hover:shadow-[0_0_30px_rgba(56,189,248,0.45)] hover:border-sky-300 transition-all group"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-6 right-4 md:bottom-8 md:right-6 z-50 group flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-full border bg-white/95 text-black border-black/10 hover:border-black/20 hover:shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-[background-color,border-color,box-shadow] duration-200"
+        whileHover={{ scale: 1.06, y: -2 }}
+        whileTap={{ scale: 0.94, y: 0 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 18, mass: 0.4 }}
         onClick={() => setIsOpen(true)}
       >
-        <Sparkles className="w-6 h-6 group-hover:text-sky-300 transition-colors" />
-        <span className="absolute -top-1 -right-1 flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-300 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-300"></span>
-        </span>
+        <Sparkles className="w-5 h-5 text-black/80 group-hover:text-black transition-colors" />
       </motion.button>
 
       <AnimatePresence>
