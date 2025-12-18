@@ -55,9 +55,15 @@ export const Portfolio: React.FC = () => {
   const imageParallaxY = useTransform(smoothProgress, [segStart, segEnd], [-18, 18], { clamp: true });
 
   const currentProject = projects[activeIndex];
+  const codeLabel = `PRJ_${currentProject.id.toUpperCase()}`;
 
   return (
-    <section ref={containerRef} id="work" className="relative h-[400vh] z-30">
+    <section
+      ref={containerRef}
+      id="work"
+      className="relative z-30"
+      style={{ height: `${projects.length * 100}vh` }}
+    >
       
       {/* STICKY CONTAINER */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col">
@@ -123,7 +129,7 @@ export const Portfolio: React.FC = () => {
                     {/* 1. Meta Tag */}
                     <div className="flex items-center gap-4 mb-6">
                        <span className="px-2 py-0.5 border border-white/15 bg-white/5 text-white/80 text-[10px] tracking-[0.16em] uppercase rounded-sm">
-                          {currentProject.code}
+                          {codeLabel}
                        </span>
                        <span className="h-[1px] w-12 bg-white/10"></span>
                        <span className="text-white/60 text-xs tracking-[0.14em] uppercase">{currentProject.category}</span>
@@ -144,11 +150,11 @@ export const Portfolio: React.FC = () => {
                        <div className="grid grid-cols-2 gap-6">
                           <div>
                              <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Client</p>
-                             <p className="text-lg text-white font-medium">{currentProject.client}</p>
+                             <p className="text-lg text-white font-medium">{currentProject.client ?? '—'}</p>
                           </div>
                           <div>
-                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Role</p>
-                             <p className="text-lg text-white font-medium">{currentProject.stats.role}</p>
+                             <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2 font-mono">Role</p>
+                             <p className="text-lg text-white font-medium">{currentProject.role ?? '—'}</p>
                           </div>
                           <div className="col-span-2 mt-4">
                              <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Brief</p>
@@ -217,7 +223,7 @@ export const Portfolio: React.FC = () => {
                             }}
                           >
                             <motion.img
-                              src={currentProject.image}
+                              src={currentProject.thumbnailUrl}
                               alt={currentProject.title}
                               className="absolute inset-0 w-full h-full object-cover opacity-80 will-change-transform"
                               style={{ y: imageParallaxY, scale: 1.02 }}
@@ -258,11 +264,11 @@ export const Portfolio: React.FC = () => {
                 {/* Caption */}
                 <div className="mt-5 flex items-baseline justify-between gap-6 text-[10px] md:text-[11px] tracking-[0.16em] text-white/55">
                   <div className="uppercase">
-                    <span className="text-white/70">{currentProject.client}</span>
+                    <span className="text-white/70">{currentProject.client ?? currentProject.title}</span>
                     <span className="text-white/35"> · </span>
                     <span className="text-white/45">{currentProject.category}</span>
                   </div>
-                  <div className="uppercase text-white/35">{currentProject.id} / {projects.length.toString().padStart(2, '0')}</div>
+                  <div className="uppercase text-white/35">{currentProject.id.toUpperCase()} / {projects.length.toString().padStart(2, '0')}</div>
                 </div>
               </div>
             </div>

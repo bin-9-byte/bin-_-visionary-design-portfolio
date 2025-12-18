@@ -1,24 +1,26 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
-import { projects, type Project } from '../data/projects';
+import { projects, type Project, type ProjectGroup } from '../data/projects';
 
-type Category = 'All' | string;
-
-const buildCategories = (items: Project[]): Category[] => {
-  const set = new Set<string>();
-  for (const p of items) set.add(p.category);
-  return ['All', ...Array.from(set).sort((a, b) => a.localeCompare(b))];
-};
+type Filter = 'all' | ProjectGroup;
 
 export const AllProjects: React.FC = () => {
-  const categories = useMemo(() => buildCategories(projects), []);
-  const [activeCategory, setActiveCategory] = useState<Category>('All');
+  const filters: { key: Filter; label: string }[] = useMemo(
+    () => [
+      { key: 'all', label: 'ALL' },
+      { key: 'spatial', label: 'SPATIAL' },
+      { key: 'product', label: 'PRODUCT' },
+      { key: 'identity', label: 'IDENTITY' },
+    ],
+    []
+  );
+  const [activeFilter, setActiveFilter] = useState<Filter>('all');
 
   const filtered = useMemo(() => {
-    if (activeCategory === 'All') return projects;
-    return projects.filter((p) => p.category === activeCategory);
-  }, [activeCategory]);
+    if (activeFilter === 'all') return projects;
+    return projects.filter((p) => p.group === activeFilter);
+  }, [activeFilter]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -98,13 +100,13 @@ export const AllProjects: React.FC = () => {
             <aside className="col-span-12 md:col-span-3 lg:col-span-2">
               <div className="md:sticky md:top-24">
                 <nav className="space-y-2">
-                  {categories.map((c) => {
-                    const isActive = activeCategory === c;
+                  {filters.map((f) => {
+                    const isActive = activeFilter === f.key;
                     return (
                       <button
-                        key={c}
+                        key={f.key}
                         type="button"
-                        onClick={() => setActiveCategory(c)}
+                        onClick={() => setActiveFilter(f.key)}
                         className={`group relative w-full text-left pl-5 text-[10px] tracking-[0.28em] uppercase transition-colors ${
                           isActive ? 'text-black' : 'text-black/45 hover:text-black/70'
                         }`}
@@ -114,7 +116,7 @@ export const AllProjects: React.FC = () => {
                             isActive ? 'opacity-100 bg-black/80' : 'opacity-0 bg-black/40 group-hover:opacity-60'
                           }`}
                         />
-                        {c}
+                        {f.label}
                       </button>
                     );
                   })}
@@ -137,8 +139,8 @@ export const AllProjects: React.FC = () => {
                       {/* Portrait-ish image like reference */}
                       <div className="relative pt-[125%]">
                         <img
-                          src={p.image}
-                          alt={`${p.client} · ${p.title}`}
+                          src={p.thumbnailUrl}
+                          alt={`${p.client ?? ''} ${p.title}`.trim()}
                           className="absolute inset-0 w-full h-full object-cover"
                           loading="lazy"
                         />
@@ -150,10 +152,10 @@ export const AllProjects: React.FC = () => {
 
                     <div className="mt-4">
                       <div className="text-[10px] tracking-[0.22em] uppercase text-black/45">
-                        {p.category}
+                        {p.group}
                       </div>
                       <div className="mt-3 text-[15px] md:text-[16px] leading-snug tracking-tight text-black uppercase">
-                        {p.client} <span className="text-black/40">•</span> {p.title}
+                        {(p.client ?? p.title).toUpperCase()} <span className="text-black/40">•</span> {p.category.toUpperCase()}
                       </div>
                     </div>
                   </motion.a>
