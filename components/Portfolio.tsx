@@ -2,48 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent, useMotionValue } from 'framer-motion';
 import { ArrowUpRight, AlignLeft } from 'lucide-react';
 
-const projects = [
-  {
-    id: "01",
-    code: "PRJ_NKORA",
-    client: "NKORA COFFEE",
-    title: "NKORA",
-    category: "Brand Identity",
-    description: "Rebranding Tokyo's premier artisanal roastery. Defined a visual language that balances organic warmth with industrial minimalism.",
-    image: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=2071&auto=format&fit=crop",
-    stats: { year: '2024', role: 'Lead Design' }
-  },
-  {
-    id: "02",
-    code: "PRJ_AERO",
-    client: "AERO SPACE",
-    title: "AERO",
-    category: "WebGL Experience",
-    description: "Real-time orbital visualization interface. High-performance 3D rendering optimized for educational exploration of low-earth orbit.",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop",
-    stats: { year: '2023', role: 'Creative Dev' }
-  },
-  {
-    id: "03",
-    code: "PRJ_SYNTH",
-    client: "SYNTH FINANCE",
-    title: "SYNTH",
-    category: "Fintech UI",
-    description: "High-frequency trading dashboard. Zero-latency data visualization system designed for institutional traders.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
-    stats: { year: '2024', role: 'Product Design' }
-  },
-  {
-    id: "04",
-    code: "PRJ_TOKYO",
-    client: "NEO TOKYO",
-    title: "TOKYO",
-    category: "Art Direction",
-    description: "Curated digital anthology of underground cyber-culture. A mixed-media exploration of the city's nocturnal rhythm.",
-    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1994&auto=format&fit=crop",
-    stats: { year: '2023', role: 'Art Director' }
-  }
-];
+import { projects } from '../data/projects';
 
 export const Portfolio: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,9 +97,7 @@ export const Portfolio: React.FC = () => {
                   </button>
                 ))}
              </div>
-             
-             {/* Bottom Decor */}
-             <div className="absolute bottom-12 w-[1px] h-32 bg-gradient-to-t from-transparent via-white/20 to-transparent"></div>
+
           </div>
 
 
@@ -313,13 +270,16 @@ export const Portfolio: React.FC = () => {
         </div>
         {/* Global Progress Bar removed for seamless background */}
 
-        <button
-          type="button"
+        <a
+          href="#/projects"
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: 'auto' });
+          }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 cursor-none group border border-white/15 px-6 py-3 rounded-full backdrop-blur-sm bg-black/40 hover:bg-white/10 transition-colors text-[11px] font-mono tracking-[0.2em] uppercase text-white/70 hover:text-white z-40"
         >
           <span>Discover all project</span>
           <ArrowUpRight size={16} className="text-white/70 group-hover:text-white transition-colors" />
-        </button>
+        </a>
 
         {/* Mobile Page Indicator */}
         <div className="absolute bottom-32 left-1/2 -translate-x-1/2 flex gap-2 lg:hidden z-40">

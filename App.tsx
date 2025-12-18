@@ -8,9 +8,24 @@ import { Contact } from './components/Contact';
 import { ChatAssistant } from './components/ChatAssistant';
 import { CustomCursor } from './components/CustomCursor';
 import { FluidBackground } from './components/FluidBackground';
+import { AllProjects } from './components/AllProjects';
+
+type Route = 'home' | 'projects';
+
+const getRouteFromHash = (): Route => {
+  return window.location.hash.startsWith('#/projects') ? 'projects' : 'home';
+};
 
 const App: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [route, setRoute] = useState<Route>(() => getRouteFromHash());
+
+  useEffect(() => {
+    const onHashChange = () => setRoute(getRouteFromHash());
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
   
   // Advanced Scroll Logic for Curtain Reveal
   const { scrollYProgress } = useScroll({
@@ -34,7 +49,7 @@ const App: React.FC = () => {
       {/* Fluid Background stays fixed at z-0, visible through the transparent content sections */}
       <FluidBackground />
       <CustomCursor />
-      <Navbar />
+      {route === 'home' && <Navbar />}
 
       {/* 
         CURTAIN REVEAL MECHANISM:
@@ -42,45 +57,50 @@ const App: React.FC = () => {
            - Transparent to show FluidBackground.
            - mb-[100vh] creates the scroll space for the reveal.
       */}
-      <div 
-        ref={containerRef}
-        className="relative z-20 mb-[100vh]"
-      >
-        <Hero />
-        
-        {/* Profile / Resume Section (Moved to Page 2) */}
-        <Profile />
-        
-        {/* Portfolio Section */}
-        <Portfolio />
-        
-        <section id="about" className="min-h-screen py-32 px-6 md:px-10 lg:px-12 xl:px-16 flex items-center justify-center relative overflow-hidden">
-          <div className="max-w-5xl mx-auto text-center relative z-10">
-            <div className="flex flex-col items-center mb-10">
-              <span className="text-[11px] tracking-[0.18em] text-white/45 uppercase">Philosophy</span>
+      {route === 'projects' ? (
+        <div ref={containerRef} className="relative z-20">
+          <AllProjects />
+        </div>
+      ) : (
+        <div ref={containerRef} className="relative z-20 mb-[100vh]">
+          <Hero />
+
+          {/* Profile / Resume Section (Moved to Page 2) */}
+          <Profile />
+
+          {/* Portfolio Section */}
+          <Portfolio />
+
+          <section
+            id="about"
+            className="min-h-screen py-32 px-6 md:px-10 lg:px-12 xl:px-16 flex items-center justify-center relative overflow-hidden"
+          >
+            <div className="max-w-5xl mx-auto text-center relative z-10">
+              <div className="flex flex-col items-center mb-10">
+                <span className="text-[11px] tracking-[0.18em] text-white/45 uppercase">Philosophy</span>
+              </div>
+              <p className="text-3xl md:text-5xl font-serif italic text-gray-100 leading-tight">
+                “Design is not just what it looks like and feels like.
+                <br className="hidden md:block" />
+                Design is how it <span className="not-italic font-semibold font-sans text-white">works.</span>”
+              </p>
             </div>
-            <p className="text-3xl md:text-5xl font-serif italic text-gray-100 leading-tight">
-              “Design is not just what it looks like and feels like.
-              <br className="hidden md:block" />
-              Design is how it <span className="not-italic font-semibold font-sans text-white">works.</span>”
-            </p>
-          </div>
-        </section>
-      </div>
+          </section>
+        </div>
+      )}
 
       {/* 
         FIXED CONTACT SECTION (z-10):
         Revealed via clip-path. We ensure a solid background here
         so it blocks the FluidBackground when it is physically revealed.
       */}
-      <motion.div 
-        style={{ clipPath }}
-        className="fixed bottom-0 left-0 w-full h-screen z-10 bg-black"
-      >
-        <div className="absolute bottom-0 left-0 w-full h-[85vh] md:h-[80vh] lg:h-[75vh] flex flex-col">
-          <Contact />
-        </div>
-      </motion.div>
+      {route === 'home' && (
+        <motion.div style={{ clipPath }} className="fixed bottom-0 left-0 w-full h-screen z-10 bg-black">
+          <div className="absolute bottom-0 left-0 w-full h-[85vh] md:h-[80vh] lg:h-[75vh] flex flex-col">
+            <Contact />
+          </div>
+        </motion.div>
+      )}
 
       <ChatAssistant />
     </main>
