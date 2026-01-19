@@ -1,7 +1,3 @@
-<div align="center">
-<img width="1200" height="475" alt="Portfolio Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
 # Visionary Design Portfolio
 
 一个现代化的交互式设计作品集网站，具有 3D 动画、流体背景和 AI 驱动的聊天助手。
