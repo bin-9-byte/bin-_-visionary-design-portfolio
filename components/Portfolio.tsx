@@ -2,7 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent, useMotionValue } from 'framer-motion';
 import { ArrowUpRight, AlignLeft } from 'lucide-react';
 
-import { projects } from '../data/projects';
+import { projects as allProjects, type Project } from '../data/projects';
+
+const FEATURED_PROJECT_IDS: Project['id'][] = ['p1', 'p2', 'p7', 'p3'];
+const projects: Project[] = FEATURED_PROJECT_IDS.map((id) => allProjects.find((p) => p.id === id)).filter(
+  (p): p is Project => Boolean(p)
+);
 
 export const Portfolio: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,6 +61,7 @@ export const Portfolio: React.FC = () => {
 
   const currentProject = projects[activeIndex];
   const codeLabel = `PRJ_${currentProject.id.toUpperCase()}`;
+  const displayIndex = (activeIndex + 1).toString().padStart(2, '0');
 
   return (
     <section
@@ -226,7 +232,8 @@ export const Portfolio: React.FC = () => {
                               src={currentProject.thumbnailUrl}
                               alt={currentProject.title}
                               className="absolute inset-0 w-full h-full object-cover opacity-80 will-change-transform"
-                              style={{ y: imageParallaxY, scale: 1.02 }}
+                              // Increase scale to avoid revealing the frame background when parallax shifts.
+                              style={{ y: imageParallaxY, scale: 1.1, transformOrigin: '50% 50%' }}
                             />
                             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06] mix-blend-overlay"></div>
                             {snapDirection && (
@@ -268,7 +275,7 @@ export const Portfolio: React.FC = () => {
                     <span className="text-white/35"> · </span>
                     <span className="text-white/45">{currentProject.category}</span>
                   </div>
-                  <div className="uppercase text-white/35">{currentProject.id.toUpperCase()} / {projects.length.toString().padStart(2, '0')}</div>
+                  <div className="uppercase text-white/35">{displayIndex} / {projects.length.toString().padStart(2, '0')}</div>
                 </div>
               </div>
             </div>
