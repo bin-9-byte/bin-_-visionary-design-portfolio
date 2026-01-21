@@ -130,7 +130,7 @@ export const AllProjects: React.FC = () => {
                 {filtered.map((p) => (
                   <motion.a
                     key={p.id}
-                    href="#"
+                    href={`#/projects/${p.id}`}
                     whileHover={{ y: -4 }}
                     transition={{ type: 'spring', stiffness: 240, damping: 22, mass: 0.6 }}
                     className="group block"

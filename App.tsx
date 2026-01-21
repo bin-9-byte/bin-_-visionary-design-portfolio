@@ -9,20 +9,31 @@ import { ChatAssistant } from './components/ChatAssistant';
 import { CustomCursor } from './components/CustomCursor';
 import { FluidBackground } from './components/FluidBackground';
 import { AllProjects } from './components/AllProjects';
+import { ProjectDetailPage } from './components/ProjectDetailPage';
 
-type Route = 'home' | 'projects';
+type Route = 'home' | 'projects' | 'project';
 
-const getRouteFromHash = (): Route => {
-  return window.location.hash.startsWith('#/projects') ? 'projects' : 'home';
+type RouteState = { route: Route; projectId: string | null };
+
+const getRouteFromHash = (): RouteState => {
+  const hash = window.location.hash;
+  if (hash.startsWith('#/projects/')) {
+    const projectId = hash.replace('#/projects/', '').split(/[?#]/)[0];
+    return { route: 'project', projectId: projectId || null };
+  }
+  if (hash.startsWith('#/projects')) {
+    return { route: 'projects', projectId: null };
+  }
+  return { route: 'home', projectId: null };
 };
 
 const App: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [route, setRoute] = useState<Route>(() => getRouteFromHash());
+  const [{ route, projectId }, setRouteState] = useState<RouteState>(() => getRouteFromHash());
 
   useEffect(() => {
-    const onHashChange = () => setRoute(getRouteFromHash());
+    const onHashChange = () => setRouteState(getRouteFromHash());
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -57,7 +68,11 @@ const App: React.FC = () => {
            - Transparent to show FluidBackground.
            - mb-[100vh] creates the scroll space for the reveal.
       */}
-      {route === 'projects' ? (
+      {route === 'project' && projectId ? (
+        <div ref={containerRef} className="relative z-20">
+          <ProjectDetailPage projectId={projectId} />
+        </div>
+      ) : route === 'projects' ? (
         <div ref={containerRef} className="relative z-20">
           <AllProjects />
         </div>

@@ -172,7 +172,8 @@ export const Portfolio: React.FC = () => {
                     </div>
 
                     <div className="mt-8 flex flex-wrap items-center gap-4">
-                      <motion.button 
+                      <motion.a 
+                        href={`#/projects/${currentProject.id}`}
                         className="inline-flex items-center gap-3 group border border-white/15 px-6 py-3 rounded-full cursor-none backdrop-blur-sm bg-white/0 hover:bg-white/5 transition-colors"
                         whileHover={{ x: 6 }}
                       >
@@ -180,7 +181,7 @@ export const Portfolio: React.FC = () => {
                          <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/70 group-hover:text-white transition-colors">
                             View Case Study
                          </span>
-                      </motion.button>
+                      </motion.a>
                     </div>
 
                  </motion.div>
