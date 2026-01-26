@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { projects, type Project, type ProjectGroup } from '../data/projects';
 
 type Filter = 'all' | ProjectGroup;
+type MediumFilter = 'all' | 'image' | 'video' | 'text';
 
 export const AllProjects: React.FC = () => {
   const filters: { key: Filter; label: string }[] = useMemo(
@@ -16,11 +17,41 @@ export const AllProjects: React.FC = () => {
     []
   );
   const [activeFilter, setActiveFilter] = useState<Filter>('all');
+  const mediumFilters: { key: MediumFilter; label: string }[] = useMemo(
+    () => [
+      { key: 'all', label: 'ALL' },
+      { key: 'image', label: 'IMAGE' },
+      { key: 'video', label: 'VIDEO' },
+      { key: 'text', label: 'TEXT' },
+    ],
+    []
+  );
+  const [activeMedium, setActiveMedium] = useState<MediumFilter>('all');
+
+  const getProjectMediums = (project: Project): Array<'image' | 'video' | 'text'> => {
+    if (project.mediums && project.mediums.length > 0) return project.mediums;
+    const mediums = new Set<'image' | 'video' | 'text'>();
+    const hasVideo = project.images.some((item) => {
+      const src = typeof item === 'string' ? item : item.src;
+      return src.toLowerCase().endsWith('.mp4');
+    });
+    if (hasVideo) {
+      mediums.add('video');
+    }
+    if (project.images.length > 0) {
+      mediums.add('image');
+    }
+    if (project.summary || project.description) {
+      mediums.add('text');
+    }
+    return Array.from(mediums);
+  };
 
   const filtered = useMemo(() => {
-    if (activeFilter === 'all') return projects;
-    return projects.filter((p) => p.group === activeFilter);
-  }, [activeFilter]);
+    const groupFiltered = activeFilter === 'all' ? projects : projects.filter((p) => p.group === activeFilter);
+    if (activeMedium === 'all') return groupFiltered;
+    return groupFiltered.filter((p) => getProjectMediums(p).includes(activeMedium));
+  }, [activeFilter, activeMedium]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -121,13 +152,41 @@ export const AllProjects: React.FC = () => {
                     );
                   })}
                 </nav>
+                <div className="mt-10 text-[10px] tracking-[0.28em] uppercase text-black/35">
+                  Media
+                </div>
+                <nav className="mt-4 space-y-2">
+                  {mediumFilters.map((f) => {
+                    const isActive = activeMedium === f.key;
+                    return (
+                      <button
+                        key={f.key}
+                        type="button"
+                        onClick={() => setActiveMedium(f.key)}
+                        className={`group relative w-full text-left pl-5 text-[10px] tracking-[0.28em] uppercase transition-colors ${
+                          isActive ? 'text-black' : 'text-black/45 hover:text-black/70'
+                        }`}
+                      >
+                        <span
+                          className={`absolute left-0 top-[0.55em] h-[5px] w-[5px] rounded-full transition-opacity ${
+                            isActive ? 'opacity-100 bg-black/80' : 'opacity-0 bg-black/40 group-hover:opacity-60'
+                          }`}
+                        />
+                        {f.label}
+                      </button>
+                    );
+                  })}
+                </nav>
               </div>
             </aside>
 
             {/* Cards */}
             <div className="col-span-12 md:col-span-9 lg:col-span-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-                {filtered.map((p) => (
+                {filtered.map((p) => {
+                  const summary = p.summary ?? p.description;
+                  const mediums = getProjectMediums(p);
+                  return (
                   <motion.a
                     key={p.id}
                     href={`#/projects/${p.id}`}
@@ -157,9 +216,32 @@ export const AllProjects: React.FC = () => {
                       <div className="mt-3 text-[15px] md:text-[16px] leading-snug tracking-tight text-black uppercase">
                         {(p.client ?? p.title).toUpperCase()} <span className="text-black/40">•</span> {p.category.toUpperCase()}
                       </div>
+                      <div className="mt-3 text-[12px] text-black/55 leading-relaxed">
+                        {summary}
+                      </div>
+                      {(mediums.length > 0 || (p.tags && p.tags.length > 0)) && (
+                        <div className="mt-4 flex flex-wrap gap-2">
+                          {mediums.map((medium) => (
+                            <span
+                              key={`${p.id}-${medium}`}
+                              className="px-2 py-1 rounded-full border border-black/10 bg-white text-[9px] tracking-[0.18em] uppercase text-black/70"
+                            >
+                              {medium}
+                            </span>
+                          ))}
+                          {(p.tags ?? []).map((tag) => (
+                            <span
+                              key={`${p.id}-${tag}`}
+                              className="px-2 py-1 rounded-full border border-black/10 text-[9px] tracking-[0.16em] uppercase text-black/45"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </motion.a>
-                ))}
+                )})}
               </div>
             </div>
           </div>

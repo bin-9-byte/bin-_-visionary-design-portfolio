@@ -1,15 +1,9 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowDown } from 'lucide-react';
-import { projects, type Project, type ImageItem } from '../data/projects';
+import { projects, type Project, type ImageItem, type WorkBlock } from '../data/projects';
 
 type Section = { id: string; label: string };
-
-const sections: Section[] = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'details', label: 'Details' },
-  { id: 'gallery', label: 'Gallery' },
-];
 
 const normalizeImage = (item: string | ImageItem): ImageItem =>
   typeof item === 'string' ? { src: item } : item;
@@ -44,7 +38,140 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId 
     );
   }
 
+  const summaryText = project.summary ?? project.description;
+  const blocks = project.blocks ?? [];
+  const navSections: Section[] = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'details', label: 'Details' },
+    ...(blocks.length > 0 ? [{ id: 'story', label: 'Thoughts' }] : []),
+    { id: 'gallery', label: 'Gallery' },
+  ];
   const galleryItems = project.images.map(normalizeImage);
+
+  const renderBlock = (block: WorkBlock, index: number) => {
+    if (block.type === 'text') {
+      return (
+        <div key={`text-${index}`} className="space-y-3">
+          {block.title ? (
+            <div className="text-[11px] tracking-[0.28em] uppercase text-black/45">
+              {block.title}
+            </div>
+          ) : null}
+          <div className="text-black/70 text-sm md:text-base leading-relaxed whitespace-pre-line">
+            {block.content}
+          </div>
+        </div>
+      );
+    }
+
+    if (block.type === 'quote') {
+      return (
+        <div key={`quote-${index}`} className="border-l border-black/10 pl-6 text-black/70">
+          <div className="text-lg md:text-xl italic leading-relaxed">“{block.content}”</div>
+          {block.author ? (
+            <div className="mt-3 text-[11px] tracking-[0.2em] uppercase text-black/45">
+              {block.author}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    if (block.type === 'image') {
+      return (
+        <div key={`image-${index}`} className="bg-white">
+          <div className="relative w-full pt-[62%]">
+            <img
+              src={block.src}
+              alt={block.caption ?? project.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
+          {block.caption ? (
+            <div className="px-4 py-3 text-[11px] tracking-[0.16em] uppercase text-black/50">
+              {block.caption}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    if (block.type === 'video') {
+      return (
+        <div key={`video-${index}`} className="bg-white">
+          <div className="relative w-full pt-[62%]">
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              controls
+              poster={block.poster}
+            >
+              <source src={block.src} />
+            </video>
+          </div>
+          {block.caption ? (
+            <div className="px-4 py-3 text-[11px] tracking-[0.16em] uppercase text-black/50">
+              {block.caption}
+            </div>
+          ) : null}
+        </div>
+      );
+    }
+
+    if (block.type === 'gallery') {
+      const items = block.items.map(normalizeImage);
+      return (
+        <div key={`gallery-${index}`} className="space-y-6">
+          {block.title ? (
+            <div className="text-[11px] tracking-[0.28em] uppercase text-black/45">
+              {block.title}
+            </div>
+          ) : null}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {items.map((item, itemIndex) => {
+              const label = item.name ?? `${project.title} ${itemIndex + 1}`;
+              if (isVideo(item.src)) {
+                return (
+                  <div key={`${item.src}-${itemIndex}`} className="bg-white">
+                    <div className="relative w-full pt-[62%]">
+                      <video
+                        className="absolute inset-0 w-full h-full object-cover"
+                        controls
+                        poster={item.poster}
+                      >
+                        <source src={item.src} />
+                      </video>
+                    </div>
+                    <div className="px-4 py-3 text-[11px] tracking-[0.16em] uppercase text-black/50">
+                      {label}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={`${item.src}-${itemIndex}`} className="bg-white">
+                  <div className="relative w-full pt-[62%]">
+                    <img
+                      src={item.src}
+                      alt={label}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="px-4 py-3 text-[11px] tracking-[0.16em] uppercase text-black/50">
+                    {label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div className="relative z-20 min-h-screen">
@@ -87,7 +214,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId 
                 <div className="text-[10px] tracking-[0.28em] uppercase text-white/45">
                   {project.category}
                 </div>
-                <div>{project.description}</div>
+                <div>{summaryText}</div>
               </motion.div>
             </div>
           </div>
@@ -104,7 +231,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId 
             <aside className="col-span-12 md:col-span-3 lg:col-span-2">
               <div className="md:sticky md:top-24">
                 <nav className="space-y-2">
-                  {sections.map((section) => (
+                  {navSections.map((section) => (
                     <a
                       key={section.id}
                       href={`#${section.id}`}
@@ -140,7 +267,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId 
                     </h2>
                   </div>
                   <div className="text-black/65 text-sm md:text-base leading-relaxed">
-                    {project.description}
+                    {summaryText}
                   </div>
                 </div>
               </section>
@@ -172,6 +299,17 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ projectId 
                   </div>
                 </div>
               </section>
+
+              {blocks.length > 0 ? (
+                <section id="story" className="scroll-mt-24 space-y-10">
+                  <div className="text-[10px] tracking-[0.28em] uppercase text-black/45">
+                    Thoughts
+                  </div>
+                  <div className="space-y-10">
+                    {blocks.map((block, index) => renderBlock(block, index))}
+                  </div>
+                </section>
+              ) : null}
 
               <section id="gallery" className="scroll-mt-24">
                 <div className="text-[10px] tracking-[0.28em] uppercase text-black/45">

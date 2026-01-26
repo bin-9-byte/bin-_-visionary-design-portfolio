@@ -93,13 +93,13 @@ export const Profile: React.FC = () => {
                className="border-t border-white/20 pt-6"
              >
                 <h3 className="text-2xl font-light text-white leading-tight mb-6">
-                  <span className="text-emerald-300 font-bold">Digital Alchemist</span> merging technical precision with aesthetic rebellion.
+                  <span className="text-emerald-300 font-bold">AI Designer</span> blending systems thinking with poetic visuals.
                 </h3>
                 
                 <div className="flex flex-col gap-2 font-mono text-xs text-gray-400 tracking-wider">
                   <div className="flex justify-between border-b border-white/10 pb-2">
                     <span>ROLE</span>
-                    <span className="text-white">FULL STACK CREATIVE</span>
+                    <span className="text-white">AI DESIGNER</span>
                   </div>
                   <div className="flex justify-between border-b border-white/10 pb-2">
                     <span>BASE</span>
@@ -108,7 +108,7 @@ export const Profile: React.FC = () => {
                   <div className="pt-4">
                     <button className="flex items-center gap-2 text-white hover:text-sky-300 transition-colors group">
                       <Download size={14} />
-                      <span className="border-b border-transparent group-hover:border-sky-300 transition-all">DOWNLOAD PROFILE_DAT</span>
+                      <span className="border-b border-transparent group-hover:border-sky-300 transition-all">DOWNLOAD CV</span>
                     </button>
                   </div>
                 </div>

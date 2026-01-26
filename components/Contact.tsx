@@ -20,11 +20,11 @@ export const Contact: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="text-4xl md:text-6xl font-semibold leading-tight tracking-tight text-white/90"
           >
-            Let’s work together.
+            Let’s connect.
           </motion.h2>
 
           <p className="mt-5 text-sm md:text-base text-white/60 max-w-xl leading-relaxed">
-            Reach out for collaboration, product design, or creative development. I usually reply within 1–2 business days.
+            Open to collaborations, research, and design partnerships. I usually reply within 1–2 business days.
           </p>
 
           <a
@@ -69,7 +69,8 @@ export const Contact: React.FC = () => {
               <div className="space-y-3 text-sm">
                 <a href="#" className="block text-white/70 hover:text-white transition-colors">Home</a>
                 <a href="#work" className="block text-white/70 hover:text-white transition-colors">Work</a>
-                <a href="#profile" className="block text-white/70 hover:text-white transition-colors">Team</a>
+                <a href="#profile" className="block text-white/70 hover:text-white transition-colors">Profile</a>
+                <a href="#thoughts" className="block text-white/70 hover:text-white transition-colors">Thoughts</a>
                 <a href="#contact" className="block text-white/70 hover:text-white transition-colors">Contact</a>
               </div>
             </div>

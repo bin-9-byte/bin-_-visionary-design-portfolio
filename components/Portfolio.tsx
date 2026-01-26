@@ -4,10 +4,8 @@ import { ArrowUpRight, AlignLeft } from 'lucide-react';
 
 import { projects as allProjects, type Project } from '../data/projects';
 
-const FEATURED_PROJECT_IDS: Project['id'][] = ['p1', 'p2', 'p7', 'p3'];
-const projects: Project[] = FEATURED_PROJECT_IDS.map((id) => allProjects.find((p) => p.id === id)).filter(
-  (p): p is Project => Boolean(p)
-);
+const featuredProjects = allProjects.filter((project) => project.featured);
+const projects: Project[] = featuredProjects.length > 0 ? featuredProjects : allProjects.slice(0, 4);
 
 export const Portfolio: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,6 +60,9 @@ export const Portfolio: React.FC = () => {
   const currentProject = projects[activeIndex];
   const codeLabel = `PRJ_${currentProject.id.toUpperCase()}`;
   const displayIndex = (activeIndex + 1).toString().padStart(2, '0');
+  const summaryText = currentProject.summary ?? currentProject.description;
+  const mediumTags = currentProject.mediums ?? [];
+  const skillTags = currentProject.tags ?? [];
 
   return (
     <section
@@ -119,7 +120,7 @@ export const Portfolio: React.FC = () => {
              {/* Floating Header */}
              <div className="absolute top-12 left-8 md:left-16 lg:left-20 xl:left-24 flex items-center gap-3 opacity-60">
                 <AlignLeft size={14} className="text-white/60" />
-                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/70">Selected Works 2023—24</span>
+                <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-white/70">Featured Works</span>
              </div>
 
              <div className="relative">
@@ -140,6 +141,27 @@ export const Portfolio: React.FC = () => {
                        <span className="h-[1px] w-12 bg-white/10"></span>
                        <span className="text-white/60 text-xs tracking-[0.14em] uppercase">{currentProject.category}</span>
                     </div>
+
+                    {(mediumTags.length > 0 || skillTags.length > 0) && (
+                      <div className="flex flex-wrap items-center gap-2 mb-6">
+                        {mediumTags.map((medium) => (
+                          <span
+                            key={medium}
+                            className="px-2 py-1 rounded-full border border-white/15 bg-white/5 text-[9px] tracking-[0.18em] uppercase text-white/70"
+                          >
+                            {medium}
+                          </span>
+                        ))}
+                        {skillTags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-1 rounded-full border border-white/10 bg-white/0 text-[9px] tracking-[0.16em] uppercase text-white/45"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     
                     {/* 2. Massive Title */}
                     <motion.h2 
@@ -165,7 +187,7 @@ export const Portfolio: React.FC = () => {
                           <div className="col-span-2 mt-4">
                              <p className="text-[10px] text-gray-500 uppercase tracking-[0.16em] mb-2">Brief</p>
                              <p className="text-white/55 leading-relaxed text-base md:text-lg">
-                                {currentProject.description}
+                                {summaryText}
                              </p>
                           </div>
                        </div>

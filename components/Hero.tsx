@@ -12,7 +12,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.6 }}
           className="text-[11px] md:text-xs font-mono tracking-[0.25em] uppercase text-white/70"
         >
-          DIGITAL DESIGN PORTFOLIO
+          PERSONAL WEBSITE
         </motion.p>
 
         <motion.h1
@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.7, delay: 0.15 }}
           className="max-w-xl text-sm md:text-base text-white/70"
         >
-          Crafting interfaces, identities, and immersive visuals that feel as fluid as the world behind them.
+          A living archive of works and thoughts across AI, product, and visual systems.
         </motion.p>
       </div>
     </section>

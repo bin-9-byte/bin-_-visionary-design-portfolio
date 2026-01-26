@@ -87,12 +87,12 @@ const App: React.FC = () => {
           <Portfolio />
 
           <section
-            id="about"
+            id="thoughts"
             className="min-h-screen py-32 px-6 md:px-10 lg:px-12 xl:px-16 flex items-center justify-center relative overflow-hidden"
           >
             <div className="max-w-5xl mx-auto text-center relative z-10">
               <div className="flex flex-col items-center mb-10">
-                <span className="text-[11px] tracking-[0.18em] text-white/45 uppercase">Philosophy</span>
+                <span className="text-[11px] tracking-[0.18em] text-white/45 uppercase">Thoughts</span>
               </div>
               <p className="text-3xl md:text-5xl font-serif italic text-gray-100 leading-tight">
                 “Design is not just what it looks like and feels like.

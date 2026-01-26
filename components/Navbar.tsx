@@ -2,23 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
-// Updated Nav Order: Profile is now the second item (first link)
 const navLinks = [
-  { name: 'Profile', href: '#profile' },
-  { name: 'Work', href: '#work' },
-  { name: 'About', href: '#about' },
-  { name: 'Contact', href: '#contact' },
+  { id: 'profile', label: 'Profile', href: '#profile' },
+  { id: 'work', label: 'Work', href: '#work' },
+  { id: 'thoughts', label: 'Thoughts', href: '#thoughts' },
+  { id: 'contact', label: 'Contact', href: '#contact' },
 ];
 
 export const Navbar: React.FC = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isBelowHero, setIsBelowHero] = useState(false);
   const [isNavPanelOpen, setIsNavPanelOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('Home');
+  const [activeSection, setActiveSection] = useState('home');
 
   const lastIsAtTopRef = useRef<boolean>(true);
   const lastIsBelowHeroRef = useRef<boolean>(false);
-  const lastActiveSectionRef = useRef<string>('Home');
+  const lastActiveSectionRef = useRef<string>('home');
 
   useEffect(() => {
     let rafId: number | null = null;
@@ -39,10 +38,9 @@ export const Navbar: React.FC = () => {
         setIsBelowHero(nextIsBelowHero);
       }
 
-      // "Home" label when near top (no layout reads)
-      if (scrollY < viewportHeight * 0.5 && lastActiveSectionRef.current !== 'Home') {
-        lastActiveSectionRef.current = 'Home';
-        setActiveSection('Home');
+      if (scrollY < viewportHeight * 0.5 && lastActiveSectionRef.current !== 'home') {
+        lastActiveSectionRef.current = 'home';
+        setActiveSection('home');
       }
     };
 
@@ -61,7 +59,7 @@ export const Navbar: React.FC = () => {
 
   // Active section via IntersectionObserver (avoids getBoundingClientRect on scroll)
   useEffect(() => {
-    const ids = ['profile', 'work', 'about', 'contact'];
+    const ids = ['profile', 'work', 'thoughts', 'contact'];
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el));
@@ -79,10 +77,9 @@ export const Navbar: React.FC = () => {
         if (!best) return;
 
         const id = (best.target as HTMLElement).id;
-        const label = id.charAt(0).toUpperCase() + id.slice(1);
-        if (label !== lastActiveSectionRef.current) {
-          lastActiveSectionRef.current = label;
-          setActiveSection(label);
+        if (id !== lastActiveSectionRef.current) {
+          lastActiveSectionRef.current = id;
+          setActiveSection(id);
         }
       },
       {
@@ -131,15 +128,15 @@ export const Navbar: React.FC = () => {
 
             <div className="hidden md:flex flex-1 items-center justify-end gap-1">
               {navLinks.map((link) => {
-                const isActive = activeSection === link.name;
+                const isActive = activeSection === link.id;
                 return (
                   <a
-                    key={link.name}
+                    key={link.id}
                     href={link.href}
                     onClick={(event) => handleNavClick(event, link.href)}
                     className="relative px-3 py-1.5 text-sm text-white/70 hover:text-white transition-colors"
                   >
-                    <span>{link.name}</span>
+                    <span>{link.label}</span>
                     {isActive && (
                       <motion.span
                         layoutId="nav-underline"
@@ -200,11 +197,11 @@ export const Navbar: React.FC = () => {
                   <div className="space-y-2">
                     {navLinks.map((link) => (
                       <button
-                        key={link.name}
+                        key={link.id}
                         onClick={(event) => handleNavClick(event as any, link.href)}
                         className="block text-left text-sm text-black/80 hover:text-black"
                       >
-                        {link.name}
+                        {link.label}
                       </button>
                     ))}
                   </div>
